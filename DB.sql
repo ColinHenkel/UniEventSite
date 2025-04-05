@@ -27,8 +27,8 @@ CREATE TABLE `EventSite`.`SuperAdmins` (
 -- University table
 CREATE TABLE `EventSite`.`University` (
   `Name` VARCHAR(45) NOT NULL,
-  `Address` TEXT NOT NULL,
-  `Description` TEXT NOT NULL,
+  `Address` VARCHAR(255) NOT NULL,
+  `Description` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`Name`)
 ) ENGINE = InnoDB;
 
@@ -42,7 +42,7 @@ CREATE TABLE `EventSite`.`RSOs` (
 -- Location table
 CREATE TABLE `EventSite`.`Location` (
   `Lname` VARCHAR(255) NOT NULL,
-  `Address` TEXT NOT NULL,
+  `Address` VARCHAR(255) NOT NULL,
   `Longitude` DOUBLE NOT NULL,
   `Latitude` DOUBLE NOT NULL,
   PRIMARY KEY (`Lname`)
@@ -54,7 +54,7 @@ CREATE TABLE `EventSite`.`Events` (
   `Time` DATETIME NOT NULL,
   `Lname` VARCHAR(255) NOT NULL,
   `Event_name` VARCHAR(255) NOT NULL,
-  `Desc` TEXT,
+  `Desc` TEXT NOT NULL,
   `University` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`Event_ID`),
   FOREIGN KEY (`University`) REFERENCES `University`(`Name`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -96,7 +96,7 @@ CREATE TABLE `EventSite`.`Comments` (
   `ID` INT NOT NULL AUTO_INCREMENT,
   `Event_ID` INT NOT NULL,
   `UID` INT NOT NULL,
-  `Text` TEXT,
+  `Text` TEXT NOT NULL,
   `rating` INT CHECK (rating BETWEEN 1 AND 5),
   `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`),
