@@ -62,9 +62,7 @@ CREATE TABLE `EventSite`.`Events` (
   `University` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`Event_ID`),
   FOREIGN KEY (`University`) REFERENCES `University`(`Name`) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (`Lname`) REFERENCES `Location`(`Lname`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CHECK (NOT EXISTS (SELECT * FROM Events E WHERE (E.Lname = Lname) AND (E.Date = Date) AND ((End > E.Start) AND (E.End > Start))))
-  UNIQUE KEY `event_unique` (`Time`, `Lname`) -- Candidate key constraint
+  FOREIGN KEY (`Lname`) REFERENCES `Location`(`Lname`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
 -- RSO_Events table (subclass of Events)
