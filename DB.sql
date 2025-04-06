@@ -51,7 +51,9 @@ CREATE TABLE `EventSite`.`Location` (
 -- Events table (superclass)
 CREATE TABLE `EventSite`.`Events` (
   `Event_ID` INT NOT NULL AUTO_INCREMENT,
-  `Time` DATETIME NOT NULL,
+  `Start` TIME NOT NULL,
+  `End` TIME NOT NULL,
+  `Date` DATE NOT NULL,
   `Lname` VARCHAR(255) NOT NULL,
   `Event_name` VARCHAR(255) NOT NULL,
   `Desc` TEXT NOT NULL,
@@ -59,6 +61,7 @@ CREATE TABLE `EventSite`.`Events` (
   PRIMARY KEY (`Event_ID`),
   FOREIGN KEY (`University`) REFERENCES `University`(`Name`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`Lname`) REFERENCES `Location`(`Lname`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CHECK (NOT EXISTS (SELECT * FROM Events E WHERE (E.Lname = Lname) AND (E.Date = Date) AND ((End > E.Start) AND (E.End > Start))))
   UNIQUE KEY `event_unique` (`Time`, `Lname`) -- Candidate key constraint
 ) ENGINE = InnoDB;
 
