@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <title>Create Account</title>
+        <script type="text/javascript" src="js/app.js"></script>
+        <link href="css/style.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="container">
+            <h1 id="title">Create Account</h1>
+            <div class="loginDiv">
+                <span id="inner-title">Enter User Information</span>
+                <input type="Firstname" id="FirstName" placeholder="First Name" class="input-field" /><br />
+                <input type="Lastname" id="LastName" placeholder="Last Name" class="input-field" /><br />
+                <input type="email" id="email" placeholder="Email" class="input-field" /><br />
+                <input type="text" id="role" placeholder="Role (Student/Admin/SuperAdmin)" class="input-field" /><br />
+                <input type="text" id="createUsername" placeholder="Username" class="input-field" /><br />
+                <input type="password" id="createPassword" placeholder="Password" class="input-field" /><br />
+                <input type="password" id="confirmPassword" placeholder="Confirm Password" class="input-field" /><br />
+                <button type="button" id="createButton" class="buttons" onclick="createAccount();">Create</button>
+                <button type="button" id="loginRedirect" class="buttons" onclick="window.location.href='login.html'" style="display: none;">Go to Login Page</button>
+                <span id="loginResult"></span>
+            </div>
+        </div>
+    </body>
+</html>
