@@ -19,7 +19,7 @@
         
         try {
             // Insert into Users table first
-            $stmt = $conn->prepare("INSERT INTO Users (firstname, lastname, email, login, password) VALUES (?, ?, ?, ?, ?)");
+            $stmt = $conn->prepare("INSERT INTO Users (firstname, lastname, email, username, password) VALUES (?, ?, ?, ?, ?)");
             $stmt->bind_param("sssss", $firstName, $lastName, $email, $login, $password);
             $stmt->execute();
             
