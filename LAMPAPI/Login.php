@@ -12,7 +12,7 @@
         returnWithError($conn->connect_error);
     } else {
         // First, check if the user exists and password matches
-        $stmt = $conn->prepare("SELECT UID, firstname, lastname, email FROM Users WHERE username = ? AND password = ?");
+        $stmt = $conn->prepare("SELECT UID, firstname, lastname, university, email FROM Users WHERE username = ? AND password = ?");
         $stmt->bind_param("ss", $login, $password);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -24,6 +24,7 @@
             $email = $row["email"];
 
             $_SESSION["userId"] = $userId; // save user ID in session
+            $_SESSION["userUni"] = $row["university"]; // save university in session
             
             // Check if user is Admin
             $isAdmin = false;

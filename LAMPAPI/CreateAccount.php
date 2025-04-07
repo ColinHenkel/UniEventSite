@@ -8,6 +8,7 @@
     $login = $inData["login"];
     $password = $inData["password"];
     $role = $inData["role"];
+    $university = $inData["university"];
     
     $conn = new mysqli("localhost", "Admin", "colin201", "EventSite");
     
@@ -19,8 +20,8 @@
         
         try {
             // Insert into Users table first
-            $stmt = $conn->prepare("INSERT INTO Users (firstname, lastname, email, username, password) VALUES (?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssss", $firstName, $lastName, $email, $login, $password);
+            $stmt = $conn->prepare("INSERT INTO Users (firstname, lastname, university, email, username, password) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssss", $firstName, $lastName, $university, $email, $login, $password);
             $stmt->execute();
             
             // Get the new user ID

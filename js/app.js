@@ -7,12 +7,14 @@ let firstName = "";
 let lastName = "";
 let email = "";
 let role = "";
+let university = "";
 
 function createAccount() {
     firstName = document.getElementById("FirstName").value;
     lastName = document.getElementById("LastName").value;
     email = document.getElementById("email").value;
     role = document.getElementById("role").value.toLowerCase();
+    university = document.getElementById("university").value;
     const login = document.getElementById("createUsername").value;
     const password = document.getElementById("createPassword").value;
     const confirmPassword = document.getElementById("confirmPassword").value;
@@ -29,6 +31,7 @@ function createAccount() {
                 firstName: firstName,
                 lastName: lastName,
                 email: email,
+                university: university,
                 login: login,
                 password: password,
                 role: role
@@ -109,4 +112,10 @@ function doLogin() {
             document.getElementById("loginResult").innerHTML = err.message;
         }
     }
+}
+
+function logout() {
+    userId = 0;
+    document.getElementById("loginResult").innerHTML = "Logged out successfully.";
+    window.location.href = "index.html";
 }

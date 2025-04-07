@@ -28,7 +28,7 @@
                 <input type="text" id="eventName" class="input-field" placeholder="Event Name" required/><br />
 
                 <label for="eventCategory">Event Category</label>
-                <input type="text" id="eventCategory" class="input-field" placeholder="Event Category" required/><br />
+                <input type="text" id="eventCategory" class="input-field" placeholder="(Public/Private/RSO)" required/><br />
 
                 <label for="eventDescription">Event Description</label>
                 <textarea id="eventDescription" class="input-field" placeholder="Event Description" required></textarea><br />
@@ -42,9 +42,12 @@
                 <label for="eventTime">Event End</label>
                 <input type="time" id="eventEnd" class="input-field" required/><br />
 
+                <label for="locationName">Location Name</label>
+                <input type="text" id="locationName" class="input-field" placeholder="Location Name" required/><br />
+
                 <label for="eventLocation">Location</label>
                 <div id="map" style="height: 300px; width: 100%;"></div>
-                <input type="text" id="eventLocation" class="input-field" placeholder="Location Name" readonly required/><br />
+                <input type="text" id="eventLocation" class="input-field" placeholder="Location Address" readonly required/><br />
                 <input type="hidden" id="latitude" name="latitude" required/>
                 <input type="hidden" id="longitude" name="longitude" required/><br />
 
@@ -82,10 +85,10 @@
             document.getElementById('latitude').value = e.latlng.lat;
             document.getElementById('longitude').value = e.latlng.lng;
 
-            getLocationName(e.latlng.lat, e.latlng.lng);
+            getLocationAddr(e.latlng.lat, e.latlng.lng);
         });
 
-        function getLocationName(lat, lng) {
+        function getLocationAddr(lat, lng) {
             var geocodingAPI = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`;
             fetch(geocodingAPI)
                 .then(response => response.json())
@@ -100,20 +103,34 @@
 
             const eventDetails = {
                 name: document.getElementById('eventName').value,
-                category: document.getElementById('eventCategory').value,
+                category: document.getElementById('eventCategory').value.toLowerCase(),
                 description: document.getElementById('eventDescription').value,
                 date: document.getElementById('eventDate').value,
                 startTime: document.getElementById('eventStart').value,
                 endTime: document.getElementById('eventEnd').value,
-                location: document.getElementById('eventLocation').value,
+                locationname: document.getElementById('locationName').value,
+                locationaddr: document.getElementById('eventLocation').value,
                 latitude: document.getElementById('latitude').value,
                 longitude: document.getElementById('longitude').value,
                 phone: document.getElementById('contactPhone').value,
                 email: document.getElementById('contactEmail').value
             };
 
-            console.log('Event created:', eventDetails);
-
+            let jsonPayload = JSON.stringify(eventDetails);
+            const urlBase = "http://www.colin201.xyz/LAMPAPI"
+            const extension = "php"
+            let url = urlBase + "/CreateEvent." + extension;
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", url, true);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log('Event created:', eventDetails);
+                } else if (xhr.readyState === 4) {
+                    console.error("Error creating event:", xhr.status, xhr.statusText);
+                }
+            };
+            xhr.send(jsonPayload);
             alert('Event created successfully!');
             document.getElementById('eventForm').reset();
             map.setView([ucfLatitude,ucfLongitude], 13);
