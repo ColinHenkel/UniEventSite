@@ -136,14 +136,3 @@ CREATE TABLE `EventSite`.`Join` (
   FOREIGN KEY (`User_ID`) REFERENCES `Users`(`UID`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`RSO_ID`) REFERENCES `RSOs`(`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
-
--- Add assertions for constraints
--- ISA: RSO_Events ⊆ Events (implemented via foreign key)
--- ISA: Private_Events ⊆ Events (implemented via foreign key)
--- ISA: Public_Events ⊆ Events (implemented via foreign key)
-
--- Disjointness: RSO_Events ∩ Private_Events = ∅
--- This would need to be enforced via triggers or application logic
-
--- Covering: RSO_Events ∪ Private_Events ∪ Public_Events = Events
--- This would need to be enforced via triggers or application logic
