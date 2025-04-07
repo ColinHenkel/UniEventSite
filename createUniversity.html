@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create University</title>
+    <script type="text/javascript" src="js/app.js"></script>
+    <link href="css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 id="Title">Create University</h1>
+
+        <div class="formBox">
+            <h2 id="inner-title">Enter University Info</h2>
+
+            <input type="text" id="universityName" placeholder="University Name" class="input-field" /><br />
+            <input type="text" id="universityAddress" placeholder="Address" class="input-field" /><br />
+            <textarea id="universityDescription" placeholder="Description" class="input-field" rows="4" style="resize: vertical;"></textarea><br />
+            <input type="number" id="studentCount" placeholder="Number of Students" class="input-field" /><br />
+
+            <label for="universityImage" class="file-label">Upload Image(s):</label>
+            <input type="file" id="universityImage" class="input-field" accept="image/*" multiple /><br />
+
+            <button class="buttons" onclick="submitUniversity();">Create University</button>
+            <span id="submitResult"></span>
+        </div>
+    </div>
+</body>
+</html>
