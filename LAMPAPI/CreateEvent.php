@@ -114,11 +114,13 @@
             $findRSOStmt->bind_param("i", $userId);
             $findRSOStmt->execute();
             $rsoResult = $findRSOStmt->get_result();
+            $rsoData = $rsoResult->fetch_assoc();
+            $rsoId = $rsoData["RSO_ID"];
             $findRSOStmt->close();
 
             $insertRsoQuery = "INSERT INTO RSO_Events (Event_ID, RSO_ID) VALUES (?, ?)";
             $insertRsoStmt = $conn->prepare($insertRsoQuery);
-            $insertRsoStmt->bind_param("ii", $eventId, $rsoResult);
+            $insertRsoStmt->bind_param("ii", $eventId, $rsoId);
             if (!$insertRsoStmt->execute()) {
                 http_response_code(500);
                 echo json_encode(array("message" => "Error creating RSO event: " . $insertRsoStmt->error));
