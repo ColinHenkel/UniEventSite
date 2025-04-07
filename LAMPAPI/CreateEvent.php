@@ -34,7 +34,7 @@
         exit();
     }
     
-    // First, check if the location exists by name
+    // Check if the location exists by name
     $locationQuery = "SELECT Lname FROM Location WHERE Lname = ?";
     $locationStmt = $conn->prepare($locationQuery);
     $locationStmt->bind_param("s", $data->locationname);
@@ -42,7 +42,7 @@
     $locationResult = $locationStmt->get_result();
     
     if ($locationResult->num_rows == 0) {
-        // Location doesn't exist, so create it
+        // Location doesn't exist so create it
         $insertLocationQuery = "INSERT INTO Location (Lname, Address, Latitude, Longitude) VALUES (?, ?, ?, ?)";
         $insertLocationStmt = $conn->prepare($insertLocationQuery);
         $insertLocationStmt->bind_param("ssdd", 
