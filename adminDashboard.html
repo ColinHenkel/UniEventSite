@@ -11,16 +11,13 @@
     <div class="container">
         <h1 id="Title">Admin Dashboard</h1>
 
-        <!-- Display Admin's University -->
         <div class="university-info">
             <h2>University: <span id="university-name">[University Name]</span></h2>
         </div>
 
         <div class="buttons-container">
-            <!-- Button to Create Events -->
             <button onclick="window.location.href='createEvent.html'">Create Event</button>
 
-            <!-- Button to Manage RSOs -->
             <button onclick="window.location.href='manageRSOs.html'">Manage RSOs</button>
         </div>
 
@@ -30,15 +27,11 @@
     </div>
 
     <script type="text/javascript">
-        // This script assumes you will fetch the logged-in admin's university dynamically.
-        // Example: You can replace this with real data by fetching from a session or an API.
-
-        // Mock admin data (In a real case, you would retrieve this from the server)
+        
         const adminData = {
             universityName: "Example University"
         };
 
-        // Set the university name in the HTML
         document.getElementById("university-name").innerText = adminData.universityName;
     </script>
 </body>
