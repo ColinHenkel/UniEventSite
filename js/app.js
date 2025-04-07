@@ -116,6 +116,5 @@ function doLogin() {
 
 function logout() {
     userId = 0;
-    document.getElementById("loginResult").innerHTML = "Logged out successfully.";
     window.location.href = "index.html";
 }
