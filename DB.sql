@@ -31,6 +31,7 @@ CREATE TABLE `EventSite`.`University` (
   `Name` VARCHAR(45) NOT NULL,
   `Address` VARCHAR(255) NOT NULL,
   `Description` VARCHAR(255) NOT NULL,
+  `StudentPopulation` INT NOT NULL,
   PRIMARY KEY (`Name`)
 ) ENGINE = InnoDB;
 
