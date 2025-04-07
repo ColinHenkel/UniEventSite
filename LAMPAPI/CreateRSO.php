@@ -13,8 +13,9 @@
     }
 
     // Extract data from request
-    $data = json_decode(file_get_contents("php://input"));
-    $name = $data->name;
+    $data = json_decode(file_get_contents("php://input"), true);
+    $name = trim($data['name']);
+    $university = trim($data['university']);
     $adminEmail = trim($data['adminEmail']);
     $memberEmails = $data['memberEmails'];
 
@@ -58,7 +59,7 @@
         $stmt = $conn->prepare("INSERT INTO RSOs (Name) VALUES (?)");
         $stmt->bind_param("s", $name);
 
-        if (!stmt->execute()) {
+        if (!$stmt->execute()) {
             throw new Exception("Error inserting RSO: " . $stmt->error);
         }
 
