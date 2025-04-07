@@ -20,7 +20,7 @@
         
         try {
             // Insert into Users table first
-            $stmt = $conn->prepare("INSERT INTO Users (firstname, lastname, university, email, username, password) VALUES (?, ?, ?, ?, ?)");
+            $stmt = $conn->prepare("INSERT INTO Users (firstname, lastname, university, email, username, password) VALUES (?, ?, ?, ?, ?, ?)");
             $stmt->bind_param("ssssss", $firstName, $lastName, $university, $email, $login, $password);
             $stmt->execute();
             
@@ -29,12 +29,12 @@
             
             // Based on role, insert into appropriate role table
             if ($role === "admin") {
-                $stmt = $conn->prepare("INSERT INTO Admins (ID) VALUES (?)");
-                $stmt->bind_param("i", $userId);
+                $stmt = $conn->prepare("INSERT INTO Admins (ID, University) VALUES (?, ?)");
+                $stmt->bind_param("is", $userId, $university);
                 $stmt->execute();
             } else if ($role === "superadmin") {
-                $stmt = $conn->prepare("INSERT INTO SuperAdmins (ID) VALUES (?)");
-                $stmt->bind_param("i", $userId);
+                $stmt = $conn->prepare("INSERT INTO SuperAdmins (ID, University) VALUES (?, ?)");
+                $stmt->bind_param("is", $userId, $university);
                 $stmt->execute();
             }
             

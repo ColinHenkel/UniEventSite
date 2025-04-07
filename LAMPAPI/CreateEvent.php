@@ -67,15 +67,10 @@
     $universityStmt = $conn->prepare($universityQuery);
     $universityStmt->bind_param("i", $userId);
     $universityStmt->execute();
-    $university = $universityStmt->get_result();
+    $universityResult = $universityStmt->get_result();
+    $universityData = $universityResult->fetch_assoc();
+    $university = $universityData["university"];
     $universityStmt->close();
-
-    $adminQuery = "SELECT ID FROM Admins WHERE ID = ?";
-    $adminStmt = $conn->prepare($adminQuery);
-    $adminStmt->bind_param("i", $userId);
-    $adminStmt->execute();
-    $adminResult = $adminStmt->get_result();
-    $adminStmt->close();
     
     // Insert event
     $insertEventQuery = "INSERT INTO Events (Start, End, Date, Lname, Event_name, `Desc`, University, Admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -88,7 +83,7 @@
         $data->name, 
         $data->description, 
         $university,
-        $adminResult
+        $userId
     );
     
     if ($insertEventStmt->execute()) {
@@ -136,7 +131,7 @@
         http_response_code(503);
         echo json_encode(array("message" => "Unable to create event: " . $insertEventStmt->error));
     }
-    
+
     $insertEventStmt->close();
     $conn->close();
 ?>
