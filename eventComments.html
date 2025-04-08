@@ -118,18 +118,28 @@
 
                     let html = "<h2>Comments</h2>";
                     data.forEach(comment => {
-                        html += `
+                        let commentHtml = `
                             <div class="comment-block">
                                 <p><strong>${comment.username}</strong> <span>(Rating: ${comment.rating}/5) - ${new Date(comment.timestamp).toLocaleString()}</span></p>
                                 <p>${comment.text}</p>
-                            </div>
                         `;
+
+                        // If the comment belongs to the current user, add Edit and Delete buttons
+                        if (comment.isOwner) {
+                            commentHtml += `
+                                <button class="edit-btn" onclick="editComment(${comment.id})">Edit</button>
+                                <button class="delete-btn" onclick="deleteComment(${comment.id})">Delete</button>
+                            `;
+                        }
+
+                        commentHtml += `</div>`;
+                        html += commentHtml;
                     });
                     container.innerHTML = html;
                 })
                 .catch(err => {
                     console.error("Error loading comments:", err);
-                    document.getElementById("comments-container").innerHTML = "<p>Error loading comments.</p>";
+                    document.getElementById("comments-container").innerHTML = "<p>No comments yet.</p>";
                 });
         }
 

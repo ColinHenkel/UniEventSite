@@ -9,6 +9,10 @@
         exit();
     }
 
+    // Start the session and get the current user's ID
+    session_start();
+    $currentUserId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
+
     // Validate and get event ID
     if (!isset($_GET['eventId']) || !is_numeric($_GET['eventId'])) {
         http_response_code(400);
@@ -20,7 +24,7 @@
 
     // Fetch comments
     $sql = "
-        SELECT u.Username, c.Text, c.rating, c.timestamp
+        SELECT u.Username, c.Text, c.rating, c.timestamp, c.UID AS comment_user_id
         FROM Comments c
         JOIN Users u ON c.UID = u.UID
         WHERE c.Event_ID = ?
@@ -45,7 +49,8 @@
             "username" => $row['Username'],
             "text" => $row['Text'],
             "rating" => $row['rating'],
-            "timestamp" => $row['timestamp']
+            "timestamp" => $row['timestamp'],
+            "isOwner" => $row['comment_user_id'] == $currentUserId // Determine if the current user is the owner
         );
     }
 
