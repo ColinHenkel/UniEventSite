@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Comments</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: Ubuntu, sans-serif;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        .comment-block {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .comment-block p {
+            margin: 5px 0;
+        }
+
+        .comment-block span {
+            color: #777;
+            font-size: 0.9em;
+        }
+
+        .form-container {
+            background: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        textarea, input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .back-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #24282f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-bottom: 10px;
+            margin-top: 20px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="event-title">Loading Event...</h1>
+
+    <div id="comments-container">
+        <p>Loading comments...</p>
+    </div>
+
+    <div class="form-container">
+        <h2>Add Your Comment and Rating</h2>
+        <form id="comment-form">
+            <textarea id="comment-text" rows="4" placeholder="Write your comment..." required></textarea>
+            <input type="number" id="rating" min="1" max="5" placeholder="Rating (1-5)" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="studentDashboard.html" class="buttons" style="text-decoration: none;">Back to Dashboard</a>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventId = urlParams.get('eventId');
+        const eventName = urlParams.get('eventName');
+
+        document.getElementById('event-title').innerText = decodeURIComponent(eventName || 'Event');
+
+        function loadComments() {
+            fetch(`http://www.colin201.xyz/LAMPAPI/GetComments.php?eventId=${eventId}`)
+                .then(res => res.json())
+                .then(data => {
+                    const container = document.getElementById("comments-container");
+                    if (!data || data.length === 0) {
+                        container.innerHTML = "<p>No comments yet.</p>";
+                        return;
+                    }
+
+                    let html = "<h2>Comments</h2>";
+                    data.forEach(comment => {
+                        html += `
+                            <div class="comment-block">
+                                <p><strong>${comment.username}</strong> <span>(Rating: ${comment.rating}/5) - ${new Date(comment.timestamp).toLocaleString()}</span></p>
+                                <p>${comment.text}</p>
+                            </div>
+                        `;
+                    });
+                    container.innerHTML = html;
+                })
+                .catch(err => {
+                    console.error("Error loading comments:", err);
+                    document.getElementById("comments-container").innerHTML = "<p>Error loading comments.</p>";
+                });
+        }
+
+        document.getElementById('comment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const commentText = document.getElementById('comment-text').value;
+            const rating = document.getElementById('rating').value;
+
+            fetch('http://www.colin201.xyz/LAMPAPI/SubmitComment.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    event_id: eventId,
+                    comment_text: commentText,
+                    rating: rating
+                })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert("Comment submitted!");
+                    document.getElementById('comment-form').reset();
+                    loadComments();
+                } else {
+                    alert("Error: " + result.error);
+                }
+            })
+            .catch(error => {
+                console.error("Submission error:", error);
+                alert("Something went wrong submitting your comment.");
+            });
+        });
+
+        loadComments();
+    </script>
+</body>
+</html>
