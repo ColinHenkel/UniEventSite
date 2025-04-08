@@ -24,7 +24,7 @@
 
     // Fetch comments
     $sql = "
-        SELECT u.Username, c.Text, c.rating, c.timestamp, c.UID AS comment_user_id
+        SELECT c.ID AS comment_id, u.Username, c.Text, c.rating, c.timestamp, c.UID AS comment_user_id
         FROM Comments c
         JOIN Users u ON c.UID = u.UID
         WHERE c.Event_ID = ?
@@ -46,6 +46,7 @@
     $comments = array();
     while ($row = $result->fetch_assoc()) {
         $comments[] = array(
+            "id" => $row['comment_id'],  // Include comment ID in the response
             "username" => $row['Username'],
             "text" => $row['Text'],
             "rating" => $row['rating'],
