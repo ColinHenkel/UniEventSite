@@ -110,15 +110,6 @@ CREATE TABLE `EventSite`.`Comments` (
   FOREIGN KEY (`UID`) REFERENCES `Users`(`UID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
--- -- Owns relationship between RSOs and RSO_Events
--- CREATE TABLE `EventSite`.`Owns` (
---   `RSO_ID` INT NOT NULL,
---   `Event_ID` INT NOT NULL,
---   PRIMARY KEY (`RSO_ID`, `Event_ID`),
---   FOREIGN KEY (`RSO_ID`) REFERENCES `RSOs`(`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
---   FOREIGN KEY (`Event_ID`) REFERENCES `RSO_Events`(`Event_ID`) ON DELETE CASCADE ON UPDATE CASCADE
--- ) ENGINE = InnoDB;
-
 -- Creates relationship between RSOs and Admins
 CREATE TABLE `EventSite`.`RSO_Creates` (
   `RSO_ID` INT NOT NULL,
@@ -136,3 +127,29 @@ CREATE TABLE `EventSite`.`Join` (
   FOREIGN KEY (`User_ID`) REFERENCES `Users`(`UID`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`RSO_ID`) REFERENCES `RSOs`(`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
+
+DELIMITER //
+
+CREATE TRIGGER before_event_insert 
+BEFORE INSERT ON `EventSite`.`Events`
+FOR EACH ROW
+BEGIN
+    DECLARE event_count INT;
+    SELECT COUNT(*) INTO event_count
+    FROM `EventSite`.`Events`
+    WHERE `Lname` = NEW.`Lname`
+    AND `Date` = NEW.`Date`
+    AND (
+        (NEW.`Start` >= `Start` AND NEW.`Start` < `End`)
+        OR
+        (NEW.`End` > `Start` AND NEW.`End` <= `End`)
+        OR
+        (NEW.`Start` <= `Start` AND NEW.`End` >= `End`)
+    );
+    IF event_count > 0 THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Cannot schedule this event: Time slot overlaps with an existing event at this location';
+    END IF;
+END//
+
+DELIMITER ;
