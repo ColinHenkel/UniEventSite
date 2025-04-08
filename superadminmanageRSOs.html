@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create RSO</title>
+    <script type="text/javascript" src="js/app.js"></script>
+    <link href="css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 id="Title">Create RSO</h1>
+
+        <div class="Back" style="position: fixed; left: 5%; bottom: 90%; transform: translateX(-50%);">
+            <button onclick="window.location.href='superadminDashboard.html'" style="color: white; background-color: #24282f; width: 100px; height: 50px; cursor: pointer; border-radius: 10px;">Back</button>
+        </div>
+
+        <div class="view-rso" style="position: fixed; left: 15%; bottom: 90%; transform: translateX(-50%);">
+            <button onclick="window.location.href='superadminViewRSO.html'" style="color: white; background-color: #24282f; width: 100px; height: 50px; cursor: pointer; border-radius: 10px;">View RSO</button>
+        </div>
+
+        <div class="event-form">
+            <form id="rsoForm">
+                <label for="rsoName">RSO Name</label>
+                <input type="text" id="rsoName" class="input-field" placeholder="RSO Name" required /><br />
+
+                <label for="universityName">University Name</label>
+                <input type="text" id="universityName" class="input-field" placeholder="University Name" required /><br />
+
+                <label for="universityDomain">University Email Domain</label>
+                <input type="text" id="universityDomain" class="input-field" placeholder="@knights.ucf.edu" required /><br />
+
+                <label>Administrator Email (Must Match Domain)</label>
+                <input type="email" class="input-field student-email" placeholder="Admin Email" required /><br />
+
+                <label>Member Emails (At least 3 more)</label>
+                <div id="memberContainer">
+                    <input type="email" class="input-field student-email" placeholder="Member Email" required /><br />
+                    <input type="email" class="input-field student-email" placeholder="Member Email" required /><br />
+                    <input type="email" class="input-field student-email" placeholder="Member Email" required /><br />
+                </div>
+                <button type="button" class="buttons" onclick="addMemberEmail()">Add Another Member</button><br /><br />
+
+                <button type="submit" class="buttons">Create RSO</button>
+            </form>
+        </div>
+
+        <div class="logout">
+            <button onclick="logout();">Logout</button>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function addMemberEmail() {
+            const container = document.getElementById('memberContainer');
+            const input = document.createElement('input');
+            input.type = 'email';
+            input.className = 'input-field student-email';
+            input.placeholder = 'Member Email';
+            input.required = true;
+            container.appendChild(input);
+            container.appendChild(document.createElement('br'));
+        }
+
+        document.getElementById('rsoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const rsoName = document.getElementById('rsoName').value;
+            const universityName = document.getElementById('universityName').value;
+            const domain = document.getElementById('universityDomain').value.trim().toLowerCase();
+            const emails = Array.from(document.querySelectorAll('.student-email')).map(input => input.value.trim());
+
+            if (!domain.startsWith('@')) {
+                alert('Email domain must start with "@"');
+                return;
+            }
+
+            const invalidEmails = emails.filter(email => !email.endsWith(domain));
+            if (invalidEmails.length > 0) {
+                alert('All emails must match the domain: ' + domain);
+                return;
+            }
+
+            if (emails.length < 4) {
+                alert('You must provide at least 4 members (including the admin).');
+                return;
+            }
+
+            const rsoData = {
+                name: rsoName,
+                university: universityName,
+                domain: domain,
+                adminEmail: emails[0],
+                memberEmails: emails.slice(1)
+            };
+
+            const urlBase = "http://www.colin201.xyz/LAMPAPI"
+            const extension = "php"
+            let url = urlBase + "/CreateRSO." + extension;
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", url, true);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.error) {
+                        alert('Error: ' + response.error);
+                    } else {
+                        alert('RSO created successfully!');
+                        console.log('RSO Created:', rsoData);
+                        document.getElementById('rsoForm').reset();
+                        document.getElementById('memberContainer').innerHTML = `
+                            <input type="email" class="input-field student-email" placeholder="Member Email" required /><br />
+                            <input type="email" class="input-field student-email" placeholder="Member Email" required /><br />
+                            <input type="email" class="input-field student-email" placeholder="Member Email" required /><br />
+                        `;
+                    }
+                }
+            };
+            xhr.send(JSON.stringify(rsoData));
+
+            document.getElementById('rsoForm').reset();
+            document.getElementById('memberContainer').innerHTML = `
+                <input type="email" class="input-field student-email" placeholder="Member Email" required /><br />
+                <input type="email" class="input-field student-email" placeholder="Member Email" required /><br />
+                <input type="email" class="input-field student-email" placeholder="Member Email" required /><br />
+            `;
+        });
+    </script>
+</body>
+</html>

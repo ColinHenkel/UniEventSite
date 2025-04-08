@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View RSOs</title>
+    <script type="text/javascript" src="js/app.js"></script>
+    <link href="css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 id="Title">View RSOs</h1>
+
+        <div id="rso-list">
+            <!-- RSOs will be loaded here -->
+        </div>
+
+        <div class="buttons-container">
+            <button onclick="window.location.href='superadminDashboard.html'">Back to Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function () {
+            fetch('http://www.colin201.xyz/LAMPAPI/FetchRSO.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Data received:", data); // Debug: log the received data
+                    
+                    const container = document.getElementById("rso-list");
+
+                    if (!data || data.length === 0) {
+                        container.innerHTML = "<p>No RSOs available.</p>";
+                        return;
+                    }
+
+                    // Create a container for all RSOs
+                    const rsosContainer = document.createElement("div");
+                    rsosContainer.className = "rsos-container";
+
+                    data.forEach(rso => {
+                        const rsoDiv = document.createElement("div");
+                        rsoDiv.className = "rso";
+                        
+                        // Safely get properties with fallbacks
+                        const rsoName = rso.RSO_Name || "Unnamed RSO";
+                        const university = rso.University || "University not specified";
+                        const adminUsername = rso.Admin_Username || "Unknown admin";
+                        const memberCount = rso.Member_Count || "0";
+
+                        rsoDiv.innerHTML = `
+                            <h2>${rsoName}</h2>
+                            <p><strong>University:</strong> ${university}</p>
+                            <p><strong>Admin:</strong> ${adminUsername}</p>
+                            <p><strong>Member Count:</strong> ${memberCount}</p>
+                        `;
+
+                        rsosContainer.appendChild(rsoDiv);
+                    });
+
+                    container.appendChild(rsosContainer);
+                })
+                .catch(error => {
+                    console.error("Error fetching RSOs:", error);
+                    document.getElementById("rso-list").innerHTML = `
+                        <p class="error-message">Error fetching RSOs: ${error.message}</p>
+                        <p>Please try again or contact support.</p>
+                    `;
+                });
+        };
+    </script>
+
+    <style>
+        .rsos-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .rso {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin-bottom: 20px;
+        }
+        
+        .rso h2 {
+            color: #24282f;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .error-message {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</body>
+</html>

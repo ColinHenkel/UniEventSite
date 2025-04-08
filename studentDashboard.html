@@ -29,12 +29,25 @@
     </div>
 
     <script type="text/javascript">
-        
-        const adminData = {
-            universityName: "Example University"
-        };
+        window.onload = function () {
+            fetch('http://www.colin201.xyz/LAMPAPI/FetchUniversity.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Data received:", data); // Debug: log the received data
 
-        document.getElementById("university-name").innerText = adminData.universityName;
+                    const universityName = data[0].University_Name || "Unknown University"; // Safely access the property
+                    document.getElementById("university-name").innerText = universityName;
+                })
+                .catch(error => {
+                    console.error("Error fetching university data:", error);
+                    document.getElementById("university-name").innerText = "Error loading university name";
+                });
+        }
     </script>
 </body>
 </html>
