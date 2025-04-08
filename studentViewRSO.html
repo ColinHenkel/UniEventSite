@@ -2,24 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>View RSOs</title>
+    <title>My RSOs</title>
     <script type="text/javascript" src="js/app.js"></script>
     <link href="css/style.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <h1 id="Title">View RSOs</h1>
-
+        <h1 id="Title">My RSOs</h1>
+        
         <div id="rso-list">
             <!-- RSOs will be loaded here -->
         </div>
-
+        
         <div class="buttons-container">
             <button onclick="window.location.href='studentDashboard.html'">Back to Dashboard</button>
         </div>
     </div>
-
+    
     <script>
         window.onload = function () {
             fetch('http://www.colin201.xyz/LAMPAPI/FetchRSO.php')
@@ -33,17 +33,20 @@
                     console.log("Data received:", data); // Debug: log the received data
                     
                     const container = document.getElementById("rso-list");
-
-                    if (!data || data.length === 0) {
-                        container.innerHTML = "<p>No RSOs available.</p>";
+                    
+                    // Filter to only show RSOs where the user is a member
+                    const myRsos = data.filter(rso => rso.Is_Member === true);
+                    
+                    if (!myRsos || myRsos.length === 0) {
+                        container.innerHTML = "<p class='no-rsos'>You are not a member of any RSOs.</p>";
                         return;
                     }
-
+                    
                     // Create a container for all RSOs
                     const rsosContainer = document.createElement("div");
                     rsosContainer.className = "rsos-container";
-
-                    data.forEach(rso => {
+                    
+                    myRsos.forEach(rso => {
                         const rsoDiv = document.createElement("div");
                         rsoDiv.className = "rso";
                         
@@ -52,17 +55,18 @@
                         const university = rso.University || "University not specified";
                         const adminUsername = rso.Admin_Username || "Unknown admin";
                         const memberCount = rso.Member_Count || "0";
-
+                        
                         rsoDiv.innerHTML = `
                             <h2>${rsoName}</h2>
                             <p><strong>University:</strong> ${university}</p>
                             <p><strong>Admin:</strong> ${adminUsername}</p>
                             <p><strong>Member Count:</strong> ${memberCount}</p>
+                            <div class="member-badge">Member</div>
                         `;
-
+                        
                         rsosContainer.appendChild(rsoDiv);
                     });
-
+                    
                     container.appendChild(rsosContainer);
                 })
                 .catch(error => {
@@ -74,7 +78,7 @@
                 });
         };
     </script>
-
+    
     <style>
         .rsos-container {
             display: flex;
@@ -91,6 +95,8 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 300px;
             margin-bottom: 20px;
+            position: relative;
+            border-left: 5px solid #4CAF50; /* Green border to indicate membership */
         }
         
         .rso h2 {
@@ -100,11 +106,46 @@
             margin-top: 0;
         }
         
+        .member-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
         .error-message {
             color: red;
             font-weight: bold;
             text-align: center;
             margin-top: 20px;
+        }
+        
+        .no-rsos {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #757575;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            margin: 20px auto;
+            max-width: 500px;
+        }
+        
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .rsos-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .rso {
+                width: 90%;
+            }
         }
     </style>
 </body>
