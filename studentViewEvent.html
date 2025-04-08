@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Events</title>
+    <script type="text/javascript" src="js/app.js"></script>
+    <link href="css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 id="Title">View Events</h1>
+
+        <div id="event-list">
+            <!-- Events will be loaded here -->
+        </div>
+
+        <div class="buttons-container">
+            <div class="buttons-container">
+                <button onclick="window.location.href='studentDashboard.html'">Back to Dashboard</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function () {
+            fetch('http://www.colin201.xyz/LAMPAPI/FetchEvents.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Data received:", data); // Debug: log the received data
+                    
+                    const container = document.getElementById("event-list");
+
+                    if (!data || data.length === 0) {
+                        container.innerHTML = "<p>No events available.</p>";
+                        return;
+                    }
+
+                    // Create a container for all events
+                    const eventsContainer = document.createElement("div");
+                    eventsContainer.className = "events-container";
+
+                    data.forEach(event => {
+                        const eventDiv = document.createElement("div");
+                        eventDiv.className = "event";
+                        
+                        // Safely get properties with fallbacks
+                        const eventName = event.Event_name || "Unnamed Event";
+                        const description = event.Description || event.Desc || "No description available";
+                        const date = event.Date ? new Date(event.Date).toLocaleDateString() : "Date not specified";
+                        const startTime = event.Start || "Not specified";
+                        const endTime = event.End || "Not specified";
+                        const location = event.Location || event.Lname || "Location not specified";
+                        const address = event.Address || "Address not specified";
+                        const university = event.University || "University not specified";
+                        const eventType = event.Event_Type || "Type not specified";
+                        const rsoName = event.RSO_Name || null;
+                        const createdBy = event.Created_By || "Unknown creator";
+
+                        eventDiv.innerHTML = `
+                            <h2>${eventName}</h2>
+                            <p><strong>Description:</strong> ${description}</p>
+                            <p><strong>Date:</strong> ${date}</p>
+                            <p><strong>Time:</strong> ${startTime} - ${endTime}</p>
+                            <p><strong>Location:</strong> ${location}, ${address}</p>
+                            <p><strong>University:</strong> ${university}</p>
+                            <p><strong>Type:</strong> ${eventType}</p>
+                            ${rsoName ? `<p><strong>RSO:</strong> ${rsoName}</p>` : ''}
+                            <p><strong>Created By:</strong> ${createdBy}</p>
+                        `;
+
+                        eventsContainer.appendChild(eventDiv);
+                    });
+
+                    container.appendChild(eventsContainer);
+                })
+                .catch(error => {
+                    console.error("Error fetching events:", error);
+                    document.getElementById("event-list").innerHTML = `
+                        <p class="error-message">Error fetching events: ${error.message}</p>
+                        <p>Please try again or contact support.</p>
+                    `;
+                });
+        };
+    </script>
+
+    <style>
+        .events-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .event {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin-bottom: 20px;
+        }
+        
+        .event h2 {
+            color: #24282f;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .error-message {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</body>
+</html>
