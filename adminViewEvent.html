@@ -30,7 +30,7 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log("Data received:", data); // Debug: log the received data
+                    console.log("Data received:", data);
                     
                     const container = document.getElementById("event-list");
 
@@ -39,7 +39,6 @@
                         return;
                     }
 
-                    // Create a container for all events
                     const eventsContainer = document.createElement("div");
                     eventsContainer.className = "events-container";
 
@@ -47,7 +46,7 @@
                         const eventDiv = document.createElement("div");
                         eventDiv.className = "event";
                         
-                        // Safely get properties with fallbacks
+                        const eventId = event.Event_ID;
                         const eventName = event.Event_name || "Unnamed Event";
                         const description = event.Description || event.Desc || "No description available";
                         const date = event.Date ? new Date(event.Date).toLocaleDateString() : "Date not specified";
@@ -70,6 +69,7 @@
                             <p><strong>Type:</strong> ${eventType}</p>
                             ${rsoName ? `<p><strong>RSO:</strong> ${rsoName}</p>` : ''}
                             <p><strong>Created By:</strong> ${createdBy}</p>
+                            <button class="comment-btn" onclick="window.location.href='adminEventComments.html?eventId=${eventId}&eventName=${encodeURIComponent(eventName)}'">View Comments & Rate</button>
                         `;
 
                         eventsContainer.appendChild(eventDiv);
@@ -95,7 +95,7 @@
             gap: 20px;
             margin-bottom: 30px;
         }
-        
+
         .event {
             background-color: white;
             padding: 20px;
@@ -103,20 +103,41 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 300px;
             margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        
+
         .event h2 {
             color: #24282f;
             border-bottom: 1px solid #eee;
             padding-bottom: 10px;
             margin-top: 0;
         }
-        
+
         .error-message {
             color: red;
             font-weight: bold;
             text-align: center;
             margin-top: 20px;
+        }
+
+        .comment-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            align-self: center;
+            margin-top: auto;
+        }
+
+        .comment-btn:hover {
+            background-color: #45a049;
         }
     </style>
 </body>
