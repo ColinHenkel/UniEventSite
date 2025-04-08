@@ -86,9 +86,11 @@
         LEFT JOIN
             RSOs r ON re.RSO_ID = r.ID
         WHERE
-            pe.Event_ID IS NOT NULL OR
-            (pr.Event_ID IS NOT NULL AND e.University = ?) OR
-            (re.Event_ID IS NOT NULL AND ($rsoCondition))
+            e.Approved = 1 AND (
+                pe.Event_ID IS NOT NULL OR
+                (pr.Event_ID IS NOT NULL AND e.University = ?) OR
+                (re.Event_ID IS NOT NULL AND ($rsoCondition))
+            )
         ORDER BY
             e.Date, e.Start
     ";

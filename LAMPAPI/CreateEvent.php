@@ -72,18 +72,22 @@
     $university = $universityData["university"];
     $universityStmt->close();
     
+    // Set Approved based on category
+    $approved = ($data->category === "public") ? 0 : 1;
+
     // Insert event
-    $insertEventQuery = "INSERT INTO Events (Start, End, Date, Lname, Event_name, `Desc`, University, Admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $insertEventQuery = "INSERT INTO Events (Start, End, Date, Lname, Event_name, `Desc`, University, Admin, Approved) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $insertEventStmt = $conn->prepare($insertEventQuery);
-    $insertEventStmt->bind_param("sssssssi", 
+    $insertEventStmt->bind_param("sssssssii", 
         $data->startTime, 
         $data->endTime, 
         $data->date, 
-        $data->locationname, // Using the location name as the foreign key reference
+        $data->locationname,
         $data->name, 
         $data->description, 
         $university,
-        $userId
+        $userId,
+        $approved
     );
     
     if ($insertEventStmt->execute()) {
