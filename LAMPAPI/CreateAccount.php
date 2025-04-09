@@ -27,7 +27,7 @@
             // Get the new user ID
             $userId = $conn->insert_id;
             
-            // Based on role, insert into appropriate role table
+            // Insert into appropriate role table
             if ($role === "admin") {
                 $stmt = $conn->prepare("INSERT INTO Admins (ID, University) VALUES (?, ?)");
                 $stmt->bind_param("is", $userId, $university);

@@ -126,14 +126,12 @@
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
-                        // If no error, alert the success message
                         console.log('Event created:', eventDetails);
                         alert('Event created successfully!');
                     } else {
-                        // Handle error returned from the backend (like from the trigger)
                         let response = JSON.parse(xhr.responseText);
                         if (response.message) {
-                            alert(response.message);  // Display the error message from the server
+                            alert(response.message);
                         } else {
                             console.error("Error creating event:", xhr.status, xhr.statusText);
                         }

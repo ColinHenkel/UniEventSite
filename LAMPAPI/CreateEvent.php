@@ -32,7 +32,6 @@
         empty($data->phone) || 
         empty($data->email)
     ) {
-        // Set response code to 400 (bad request) and tell the user
         http_response_code(400);
         echo json_encode(array("message" => "Unable to create event. Data is incomplete."));
         exit();
@@ -67,7 +66,7 @@
         // Set approved based on category
         $approved = ($data->category === "public") ? 0 : 1;
         
-        // Check if the event's time overlaps with existing events using the trigger
+        // Insert the event into the Events table
         $insertEventQuery = "INSERT INTO Events (Start, End, Date, Lname, Event_name, `Desc`, University, Admin, Approved) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $insertEventStmt = $conn->prepare($insertEventQuery);
         $insertEventStmt->bind_param("sssssssii", 
@@ -125,12 +124,11 @@
                 $insertRsoStmt->close();
             }
         } else {
-            // Set response code - 503 service unavailable
             http_response_code(503);
             echo json_encode(array("message" => "Unable to create event: " . $insertEventStmt->error));
         }
     } catch (Exception $e) {
-        // Catch any error, including the signal from the trigger
+        // Catch error from trigger
         http_response_code(400);
         echo json_encode(array("message" => $e->getMessage()));
         exit();

@@ -38,9 +38,9 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log("Data received:", data); // Debug: log the received data
+                    console.log("Data received:", data);
 
-                    const universityName = data[0].University_Name || "Unknown University"; // Safely access the property
+                    const universityName = data[0].University_Name || "Unknown University";
                     document.getElementById("university-name").innerText = universityName;
                 })
                 .catch(error => {

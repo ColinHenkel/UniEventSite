@@ -32,7 +32,7 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log("Data received:", data); // Debug: log the received data
+                    console.log("Data received:", data);
                     
                     const container = document.getElementById("event-list");
 
@@ -41,7 +41,6 @@
                         return;
                     }
 
-                    // Create a container for all events
                     const eventsContainer = document.createElement("div");
                     eventsContainer.className = "events-container";
 
@@ -49,7 +48,6 @@
                         const eventDiv = document.createElement("div");
                         eventDiv.className = "event";
                         
-                        // Safely get properties with fallbacks
                         const eventId = event.Event_ID;
                         const eventName = event.Event_name || "Unnamed Event";
                         const description = event.Description || event.Desc || "No description available";
@@ -137,7 +135,7 @@
             cursor: pointer;
             transition: background-color 0.3s;
             align-self: center;
-            margin-top: auto; /* Push button to bottom */
+            margin-top: auto;
         }
 
         .comment-btn:hover {

@@ -24,9 +24,7 @@
     </div>
     
     <script>
-        // Join RSO function
         function joinRSO(rsoId, rsoName) {
-            // Get the button element to update its state
             const joinButton = document.getElementById(`join-button-${rsoId}`);
             if (joinButton) {
                 joinButton.disabled = true;
@@ -43,7 +41,6 @@
                 })
             })
             .then(response => {
-                // Check if the response is JSON
                 const contentType = response.headers.get('content-type');
                 if (contentType && contentType.includes('application/json')) {
                     return response.json().then(data => {
@@ -53,7 +50,6 @@
                         return data;
                     });
                 } else {
-                    // If not JSON, likely an error page
                     return response.text().then(text => {
                         throw new Error('Server returned non-JSON response. Please check server logs.');
                     });
@@ -63,14 +59,12 @@
                 console.log("Join response:", data);
                 if (data.success) {
                     showMessage(`Successfully joined ${rsoName}!`, "success");
-                    // Update button to show joined
                     if (joinButton) {
                         joinButton.textContent = "Joined ✓";
                         joinButton.className = "join-button joined";
                         joinButton.disabled = true;
                     }
                     
-                    // Update member count display
                     const memberCountElement = document.getElementById(`member-count-${rsoId}`);
                     if (memberCountElement) {
                         const currentCount = parseInt(memberCountElement.textContent) || 0;
@@ -83,7 +77,6 @@
             .catch(error => {
                 console.error("Error joining RSO:", error);
                 showMessage(`Error: ${error.message}`, "error");
-                // Reset button
                 if (joinButton) {
                     joinButton.disabled = false;
                     joinButton.textContent = "Join";
@@ -91,7 +84,6 @@
             });
         }
 
-        // Show message function
         function showMessage(message, type = "info") {
             const messageContainer = document.getElementById("message-container");
             
@@ -101,17 +93,14 @@
             
             messageContainer.appendChild(msgElement);
             
-            // Auto remove after 5 seconds
             setTimeout(() => {
                 msgElement.remove();
             }, 5000);
         }
 
-        // Load RSOs
         function loadRSOs() {
             fetch('http://www.colin201.xyz/LAMPAPI/FetchRSO.php')
                 .then(response => {
-                    // Check if the response is JSON
                     const contentType = response.headers.get('content-type');
                     if (contentType && contentType.includes('application/json')) {
                         return response.json().then(data => {
@@ -121,7 +110,6 @@
                             return data;
                         });
                     } else {
-                        // If not JSON, likely an error page
                         return response.text().then(text => {
                             console.error("Non-JSON response:", text);
                             throw new Error('Server returned non-JSON response. The server might have PHP errors.');
@@ -132,14 +120,13 @@
                     console.log("RSOs received:", data);
                     
                     const container = document.getElementById("rso-list");
-                    container.innerHTML = ''; // Clear loading message
+                    container.innerHTML = '';
                     
                     if (!data || data.length === 0) {
                         container.innerHTML = "<p>No RSOs available.</p>";
                         return;
                     }
                     
-                    // Create a container for all RSOs
                     const rsosContainer = document.createElement("div");
                     rsosContainer.className = "rsos-container";
                     
@@ -147,7 +134,6 @@
                         const rsoDiv = document.createElement("div");
                         rsoDiv.className = "rso";
                         
-                        // Safely get properties with fallbacks
                         const rsoId = rso.RSO_ID || 0;
                         const rsoName = rso.RSO_Name || "Unnamed RSO";
                         const university = rso.University || "University not specified";
@@ -158,7 +144,6 @@
                         
                         let buttonHtml = '';
                         
-                        // Determine button state
                         if (isMember) {
                             buttonHtml = `<button id="join-button-${rsoId}" class="join-button joined" disabled>Joined ✓</button>`;
                         } else if (canJoin) {
@@ -191,7 +176,6 @@
                 });
         }
 
-        // Initialize page
         window.onload = function() {
             loadRSOs();
         };

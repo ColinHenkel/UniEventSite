@@ -11,7 +11,7 @@
     if ($conn->connect_error) {
         returnWithError($conn->connect_error);
     } else {
-        // First, check if the user exists and password matches
+        // Check if the user exists and password matches
         $stmt = $conn->prepare("SELECT UID, firstname, lastname, university, email FROM Users WHERE username = ? AND password = ?");
         $stmt->bind_param("ss", $login, $password);
         $stmt->execute();
@@ -23,8 +23,8 @@
             $lastname = $row["lastname"];
             $email = $row["email"];
 
-            $_SESSION["userId"] = $userId; // save user ID in session
-            $_SESSION["userUni"] = $row["university"]; // save university in session
+            $_SESSION["userId"] = $userId;
+            $_SESSION["userUni"] = $row["university"];
             
             // Check if user is Admin
             $isAdmin = false;
@@ -47,7 +47,7 @@
             $superAdminStmt->close();
             
             // Determine role
-            $role = "student"; // Default role
+            $role = "student";
             if ($isSuperAdmin) {
                 $role = "superadmin";
             } else if ($isAdmin) {

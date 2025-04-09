@@ -58,7 +58,7 @@
             $userRsos[] = $rsoRow['RSO_ID'];
         }
         
-        // Simplified query that's less likely to cause SQL errors
+        // RSO fetch query
         $query = "
             SELECT 
                 r.ID AS RSO_ID,

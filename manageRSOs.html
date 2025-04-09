@@ -33,8 +33,9 @@
                 <label>Administrator Email (Must Match Domain)</label>
                 <input type="email" class="input-field student-email" placeholder="Admin Email" required /><br />
 
-                <label>Member Emails (At least 3 more)</label>
+                <label>Member Emails (At least 4 more)</label>
                 <div id="memberContainer">
+                    <input type="email" class="input-field student-email" placeholder="Member Email" required /><br />
                     <input type="email" class="input-field student-email" placeholder="Member Email" required /><br />
                     <input type="email" class="input-field student-email" placeholder="Member Email" required /><br />
                     <input type="email" class="input-field student-email" placeholder="Member Email" required /><br />
@@ -81,8 +82,8 @@
                 return;
             }
 
-            if (emails.length < 4) {
-                alert('You must provide at least 4 members (including the admin).');
+            if (emails.length < 5) {
+                alert('You must provide at least 5 members (including the admin).');
                 return;
             }
 

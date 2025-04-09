@@ -30,11 +30,10 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log("Data received:", data); // Debug: log the received data
+                    console.log("Data received:", data);
                     
                     const container = document.getElementById("rso-list");
                     
-                    // Filter to only show RSOs where the user is a member
                     const myRsos = data.filter(rso => rso.Is_Member === true);
                     
                     if (!myRsos || myRsos.length === 0) {
@@ -42,7 +41,6 @@
                         return;
                     }
                     
-                    // Create a container for all RSOs
                     const rsosContainer = document.createElement("div");
                     rsosContainer.className = "rsos-container";
                     
@@ -50,7 +48,6 @@
                         const rsoDiv = document.createElement("div");
                         rsoDiv.className = "rso";
                         
-                        // Safely get properties with fallbacks
                         const rsoName = rso.RSO_Name || "Unnamed RSO";
                         const university = rso.University || "University not specified";
                         const adminUsername = rso.Admin_Username || "Unknown admin";
@@ -96,7 +93,7 @@
             width: 300px;
             margin-bottom: 20px;
             position: relative;
-            border-left: 5px solid #4CAF50; /* Green border to indicate membership */
+            border-left: 5px solid #4CAF50;
         }
         
         .rso h2 {
@@ -136,7 +133,6 @@
             max-width: 500px;
         }
         
-        /* Responsive styling */
         @media (max-width: 768px) {
             .rsos-container {
                 flex-direction: column;

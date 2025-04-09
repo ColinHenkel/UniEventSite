@@ -135,7 +135,6 @@
         const eventId = urlParams.get('eventId');
         const eventName = urlParams.get('eventName');
         
-        // Global variable to store the currently edited comment ID
         let currentEditId = null;
 
         document.getElementById('event-title').innerText = decodeURIComponent(eventName || 'Event');
@@ -158,7 +157,6 @@
                                 <p>${comment.text}</p>
                         `;
 
-                        // If the comment belongs to the current user, add Edit and Delete buttons
                         if (comment.isOwner) {
                             commentHtml += `
                                 <button class="edit-btn" onclick="editComment(${comment.id})">Edit</button>
@@ -178,11 +176,9 @@
         }
         
         function editComment(commentId) {
-            // Find the comment block
             const commentBlocks = document.querySelectorAll('.comment-block');
             let commentBlock = null;
             
-            // Find the specific comment block with the edit button for this comment ID
             for (let block of commentBlocks) {
                 const editButton = block.querySelector(`.edit-btn[onclick="editComment(${commentId})"]`);
                 if (editButton) {
@@ -193,27 +189,21 @@
             
             if (!commentBlock) return;
             
-            // Find the comment text (second paragraph in the comment block)
             const commentTextElement = commentBlock.querySelectorAll('p')[1];
             const commentText = commentTextElement.textContent;
             
-            // Find the rating (in the first paragraph)
             const ratingText = commentBlock.querySelector('p span').textContent;
             const rating = parseInt(ratingText.match(/Rating: (\d+)\/5/)[1]);
             
-            // Fill the form with current values
             document.getElementById('comment-text').value = commentText;
             document.getElementById('rating').value = rating;
             
-            // Change form submission behavior to update instead of create
             currentEditId = commentId;
             
-            // Change UI to reflect editing mode
             document.getElementById('submit-button').textContent = 'Update Comment';
             document.getElementById('cancel-edit-btn').style.display = 'inline-block';
             document.getElementById('form-title').textContent = 'Edit Your Comment';
             
-            // Scroll to the form
             document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
         }
         
@@ -235,7 +225,7 @@
                 .then(result => {
                     if (result.success) {
                         alert("Comment deleted!");
-                        loadComments(); // Refresh the comments after deletion
+                        loadComments();
                     } else {
                         alert("Error deleting comment: " + result.error);
                     }
@@ -247,7 +237,6 @@
             }
         }
 
-        // Set up cancel button event handler
         document.getElementById('cancel-edit-btn').addEventListener('click', cancelEdit);
 
         document.getElementById('comment-form').addEventListener('submit', function(e) {
@@ -257,7 +246,6 @@
             const rating = document.getElementById('rating').value;
             
             if (currentEditId) {
-                // Update existing comment
                 fetch('http://www.colin201.xyz/LAMPAPI/EditComment.php', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
@@ -283,7 +271,6 @@
                     alert("Something went wrong updating your comment.");
                 });
             } else {
-                // Add new comment (original code)
                 fetch('http://www.colin201.xyz/LAMPAPI/SubmitComment.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },

@@ -49,7 +49,7 @@
 
         function displayPendingEvents(events) {
             const container = document.getElementById("pending-events-container");
-            container.innerHTML = ""; // Clear loading message
+            container.innerHTML = "";
 
             if (!events || events.length === 0) {
                 container.innerHTML = "<p>No pending public events to approve.</p>";
@@ -72,7 +72,6 @@
             eventDiv.className = "event";
             eventDiv.dataset.eventId = event.Event_ID;
             
-            // Format date if it exists
             const formattedDate = event.Date ? new Date(event.Date).toLocaleDateString() : "Date not specified";
             
             eventDiv.innerHTML = `
@@ -136,16 +135,13 @@
                 console.log("Update result:", result);
                 
                 if (result.status === "success") {
-                    // Remove the event card from the UI
                     const eventElement = document.querySelector(`.event[data-event-id="${eventId}"]`);
                     if (eventElement) {
                         eventElement.remove();
                     }
                     
-                    // Display success message
                     alert(result.message);
                     
-                    // Check if there are no more events
                     const remainingEvents = document.querySelectorAll('.event');
                     if (remainingEvents.length === 0) {
                         document.getElementById("pending-events-container").innerHTML = 

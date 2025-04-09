@@ -98,7 +98,7 @@ CREATE TABLE `EventSite`.`Public_Events` (
   FOREIGN KEY (`Event_ID`) REFERENCES `Events`(`Event_ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
--- Comments table (for the diamond relationship)
+-- Comments table
 CREATE TABLE `EventSite`.`Comments` (
   `ID` INT NOT NULL AUTO_INCREMENT,
   `Event_ID` INT NOT NULL,

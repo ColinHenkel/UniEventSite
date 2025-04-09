@@ -61,7 +61,7 @@
     $emailParts = explode('@', $userEmail);
     $userEmailDomain = $emailParts[1] ?? '';
     
-    // Get RSO admin email domain (assuming admin's email domain is the university domain)
+    // Get RSO admin email domain
     $rsoQuery = "
         SELECT a.email
         FROM RSOs r

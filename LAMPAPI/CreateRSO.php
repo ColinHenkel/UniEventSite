@@ -1,5 +1,4 @@
 <?php
-
     // Retrieve admin ID from session
     session_start();
     $userId = $_SESSION["userId"];

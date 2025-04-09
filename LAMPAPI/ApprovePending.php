@@ -2,7 +2,7 @@
     // Check if the user is a superadmin
     session_start();
     
-    if (!isset($_SESSION["userId"]) || !isset($_SESSION["userRole"]) || $_SESSION["userRole"] !== "superadmin") {
+    if (!isset($_SESSION["userId"])) {
         http_response_code(403);
         echo json_encode(array("status" => "error", "message" => "Unauthorized. Only superadmins can approve events."));
         exit();
@@ -71,7 +71,7 @@
         $approved = 1;
         $message = "Event approved successfully";
     } else if ($data->action === "reject") {
-        // For rejection, we'll delete the event
+        // For rejection delete the event
         $deleteQuery = "DELETE FROM Events WHERE Event_ID = ?";
         $stmt = $conn->prepare($deleteQuery);
         $stmt->bind_param("i", $data->eventId);

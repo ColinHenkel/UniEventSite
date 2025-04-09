@@ -46,12 +46,12 @@
     $comments = array();
     while ($row = $result->fetch_assoc()) {
         $comments[] = array(
-            "id" => $row['comment_id'],  // Include comment ID in the response
+            "id" => $row['comment_id'],
             "username" => $row['Username'],
             "text" => $row['Text'],
             "rating" => $row['rating'],
             "timestamp" => $row['timestamp'],
-            "isOwner" => $row['comment_user_id'] == $currentUserId // Determine if the current user is the owner
+            "isOwner" => $row['comment_user_id'] == $currentUserId
         );
     }
 
